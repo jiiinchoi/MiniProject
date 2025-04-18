@@ -1,4 +1,13 @@
 package com.example.backend.todo.service;
 
-public class TodoService {
+
+import com.example.backend.todo.dto.TodoDTO;
+import org.springframework.transaction.annotation.Transactional;
+
+
+@Transactional
+public interface TodoService {
+
+    TodoDTO getOne(Long tno);
+
 }

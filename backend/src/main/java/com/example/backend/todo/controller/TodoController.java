@@ -18,7 +18,7 @@ public class TodoController {
 
     private final TodoRepository todoRepository;
 
-    // ✅ Todo 목록 조회
+
     @GetMapping("/list")
     public List<TodoDTO> getList() {
         List<Todo> todos = todoRepository.findAll();
@@ -28,7 +28,7 @@ public class TodoController {
                 .collect(Collectors.toList());
     }
 
-    // ✅ Todo 등록
+
     @PostMapping("")
     public TodoDTO register(@RequestBody TodoDTO dto) {
 
@@ -43,7 +43,7 @@ public class TodoController {
         return entityToDTO(saved);
     }
 
-    // ✅ Entity → DTO 변환
+
     private TodoDTO entityToDTO(Todo todo) {
         return TodoDTO.builder()
                 .tno(todo.getTno())

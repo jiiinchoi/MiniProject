@@ -23,28 +23,28 @@ public class Todo {
 
     private String writer;
 
-    // ✅ 완료 여부 필드 (추가 가능)
+
     private boolean complete;
 
-    // ✅ 등록일/수정일 직접 관리
+
     private LocalDateTime regDate;
 
     private LocalDateTime modDate;
 
-    // ✅ INSERT 직전에 실행
+
     @PrePersist
     public void onCreate() {
         this.regDate = LocalDateTime.now();
         this.modDate = LocalDateTime.now();
     }
 
-    // ✅ UPDATE 직전에 실행
+
     @PreUpdate
     public void onUpdate() {
         this.modDate = LocalDateTime.now();
     }
 
-    // ✅ 제목 수정용 커스텀 메서드
+
     public void changeTitle(String title){
         this.title = title;
     }

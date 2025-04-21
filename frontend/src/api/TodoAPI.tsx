@@ -1,42 +1,34 @@
-import axios from "axios";
-import type { ActionResult } from "~/types/common";
-import jwtAxios from "~/util/jwtUtil";
-import type { TodoAdd } from "~/types/Todo"; // 필요한 경우 추가
+import jwtAxios from "../util/jwtUtil";
+import { PageResponse, TodoAdd, todoDTO } from "../types/Todo";
 
-const host = "http://localhost:8080/api/v1/todos";
+const HOST: string = import.meta.env.VITE_API_SERVER;
 
-// ✅ 1. 목록 조회
-export async function testTodoList(page: string, size: string) {
-    const res = await jwtAxios.get(`${host}/list?page=${page}&size=${size}`);
+// Create
+export async function addTodo(todo: TodoAdd): Promise<number> {
+    const res = await jwtAxios.post(`${HOST}`, todo);
     return res.data;
 }
 
-// ✅ 2. 등록 (비동기 예제용)
-export async function testTodoAdd(todo: TodoAdd): Promise<ActionResult<number>> {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log(todo);
-    return { result: "success", data: 123 };
-}
-
-// ✅ 3. 등록 (FormData 방식)
-export async function testTodoAddForm(formData: FormData): Promise<ActionResult<number>> {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    console.log(formData);
-
-    const res = await axios.post(`${host}`, formData);
-    console.log(res);
-
+// Read
+export async function getTodo(tno: number): Promise<todoDTO> {
+    const res = await jwtAxios.get(`${HOST}/${tno}`);
     return res.data;
 }
 
-// ✅ 4. 수정 (PUT 방식)
-export async function testTodoModify(tno: number, formData: FormData): Promise<ActionResult<number>> {
-    const res = await axios.put(`${host}/${tno}`, formData);
+// Read - List
+export async function getTodoList(page: number = 1, size: number = 10): Promise<PageResponse<todoDTO>> {
+    const param = { page, size };
+    const res = await jwtAxios.get(`${HOST}/list`, { params: param });
     return res.data;
 }
 
-// ✅ 5. 삭제 (DELETE 방식)
-export async function testTodoDelete(tno: number): Promise<ActionResult<number>> {
-    const res = await axios.delete(`${host}/${tno}`);
+// Update
+export async function updateTodo(tno: number, title: string): Promise<todoDTO> {
+    const res = await jwtAxios.put(`${HOST}/${tno}`, { title, tno });
     return res.data;
+}
+
+// Delete
+export async function deleteTodo(tno: number): Promise<void> {
+    await jwtAxios.delete(`${HOST}/${tno}`);
 }

@@ -23,10 +23,11 @@ export async function getTodoList(page: number = 1, size: number = 10): Promise<
 }
 
 // Update
-export async function updateTodo(tno: number, title: string): Promise<todoDTO> {
-    const res = await jwtAxios.put(`${HOST}/${tno}`, { title, tno });
+export async function updateTodo(tno: number, formData: FormData): Promise<todoDTO> {
+    const res = await jwtAxios.put(`${HOST}/${tno}`, formData);
     return res.data;
 }
+
 
 // Delete
 export async function deleteTodo(tno: number): Promise<void> {

@@ -1,56 +1,65 @@
 package com.example.backend.todo.controller;
 
 import com.example.backend.todo.dto.TodoDTO;
-import com.example.backend.todo.entities.Todo;
-import com.example.backend.todo.repository.TodoRepository;
+import com.example.backend.todo.dto.ActionResultDTO;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/todos")
+@Log4j2
 @RequiredArgsConstructor
-@Slf4j
 public class TodoController {
 
-    private final TodoRepository todoRepository;
+    @GetMapping("list")
+    public ResponseEntity<List<TodoDTO>> list1() {
 
+        List<TodoDTO> list = List.of(
+                TodoDTO.builder()
+                        .tno(10L)
+                        .title("title10")
+                        .writer("writer10")
+                        .build(),
+                TodoDTO.builder()
+                        .tno(9L)
+                        .title("title9")
+                        .writer("writer9")
+                        .build()
+        );
 
-    @GetMapping("/list")
-    public List<TodoDTO> getList() {
-        List<Todo> todos = todoRepository.findAll();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-        return todos.stream()
-                .map(this::entityToDTO)
-                .collect(Collectors.toList());
+        log.info("----------------------");
+        log.info(list);
+
+        return ResponseEntity.ok(list);
     }
-
 
     @PostMapping("")
-    public TodoDTO register(@RequestBody TodoDTO dto) {
+    public ResponseEntity<ActionResultDTO<Long>> post(TodoDTO dto) {
 
-        Todo todo = Todo.builder()
-                .title(dto.getTitle())
-                .writer(dto.getWriter())
-                .complete(false)
-                .build();
+        log.info("----------------post--------------------");
+        log.info(dto);
 
-        Todo saved = todoRepository.save(todo);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-        return entityToDTO(saved);
-    }
-
-
-    private TodoDTO entityToDTO(Todo todo) {
-        return TodoDTO.builder()
-                .tno(todo.getTno())
-                .title(todo.getTitle())
-                .writer(todo.getWriter())
-                .regDate(todo.getRegDate())
-                .modDate(todo.getModDate())
-                .build();
+        return ResponseEntity.ok(
+                ActionResultDTO.<Long>builder()
+                        .result("success")
+                        .data(10L)
+                        .build()
+        );
     }
 }
